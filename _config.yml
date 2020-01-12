@@ -31,10 +31,14 @@ github_username:  jekyll
 
 # Build settings
 # theme: minima
+source: ./build
+
 plugins:
   - jekyll-sitemap
   - jekyll-seo-tag
 
+keep_files: [assets]
+incremental: true
 
 exclude:
   - package.json
@@ -43,10 +47,10 @@ exclude:
   - gulpfile.js
   - README.md
   - yarn.lock
-  - /build
   - /img
   - /js
   - /scss
+  - /pug
 
 
 # Exclude from processing.
