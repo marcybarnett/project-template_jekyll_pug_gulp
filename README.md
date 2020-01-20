@@ -1,2 +1,2 @@
 # project-template
-Starter project + Gulp
+Jekyll Starter project + Pug + Gulp
