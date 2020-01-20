@@ -27,8 +27,9 @@ const styleSrc = './scss/**/*.scss',
   imgDest = './_site/assets/img/',
   siteRoot = "./_site",
   pugSrc = './pug/*.pug',
-  // pugDest = './pug/output/';
-  pugDest = './build/';
+  pugLayoutSrc = './pug/layouts/*.pug',
+  pugDest = './build/',
+  pugLayoutDest = './build/_layouts/';
 
 
 // --------------------------------------------
@@ -51,16 +52,22 @@ function style() {
 }
 exports.style = style;
 
-// Compile Pug
+// Compile Pug - root
 function pug() {
   return gulp.src(pugSrc)
-    .pipe(gpug({
-      pretty: true
-    }))
+    .pipe(gpug())
     .pipe(strip())
     .pipe(gulp.dest(pugDest));
 }
 exports.pug = pug;
+
+// Compile Pug - layouts
+function pugLayouts() {
+  return gulp.src(pugLayoutSrc)
+    .pipe(gpug())
+    .pipe(gulp.dest(pugLayoutDest));
+}
+exports.pugLayouts = pugLayouts;
 
 // Build Site
 function jekyllBuild() {
@@ -69,12 +76,6 @@ function jekyllBuild() {
   });
 }
 exports.jekyllBuild = jekyllBuild;
-
-// BrowserSync Reload
-function browserSyncReload(done) {
-  browserSync.reload();
-  done();
-}
 
 
 
@@ -117,8 +118,11 @@ function watch() {
   gulp.watch(scriptSrc, minifyScript);
   gulp.watch(imgSrc, imageMin);
   gulp.watch(pugSrc, pug);
-  // gulp.watch(pugDest, stripHtml);
-  gulp.watch(htmlDest, gulp.series(jekyllBuild, browserSyncReload));
+  gulp.watch(pugLayoutSrc, pugLayouts);
+  gulp.watch(pugDest, stripHtml);
+
+  // gulp.watch(htmlDest).on('change', jekyllBuild);
+  gulp.watch(htmlDest).on('change', gulp.series(jekyllBuild, browserSync.reload));
 
   // refresh browser
   gulp.watch(styleDest).on('change', browserSync.reload);
